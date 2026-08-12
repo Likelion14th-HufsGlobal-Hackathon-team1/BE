@@ -1,0 +1,16 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mcm-archiv-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: mcm_archiv
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      TZ: UTC
+    ports:
+      - "3306:3306"
+    volumes:
+      - mcm-archiv-mysql-data:/var/lib/mysql
+
+volumes:
+  mcm-archiv-mysql-data:
