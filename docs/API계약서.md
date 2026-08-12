@@ -11,7 +11,7 @@
 | 항목 | 규칙 |
 | --- | --- |
 | Base URL | `TBD` (배포 시 확정) |
-| 인증 | `Authorization: Bearer <JWT>` — `POST /auth`, `GET /health-check` 제외 전부 필수 |
+| 인증 | `Authorization: Bearer <JWT>` — `POST /auth`, `POST /users`(회원가입), `GET /health-check` 제외 전부 필수 (2026-08-12 수정: 회원가입은 토큰 발급 전이라 인증 불필요하게 정정) |
 | 날짜/시간 | datetime은 `Instant`(UTC, `Z` 접미) 예: `2026-08-12T05:00:00Z`. 날짜만 필요한 값은 `YYYY-MM-DD` |
 | 성공 응답 | **raw 객체** 그대로 반환. 공통 래퍼(`ApiResponse<T>`) 없음 |
 | 에러 응답 | `{ "error": { "code": "...", "message": "..." } }` 하나로 통일 |
@@ -50,6 +50,7 @@
 ### `POST /users`
 회원가입.
 
+- 인증: 불필요
 - Request
 ```json
 {
