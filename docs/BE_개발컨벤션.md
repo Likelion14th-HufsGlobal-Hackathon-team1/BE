@@ -1,8 +1,8 @@
 # BE 개발 컨벤션 — MCM-Archiv (SJF 트랙 해커톤)
 
 > 멋쟁이사자처럼 14기 해커톤 · SJF(성주재단) 트랙
-> 작성: BE 팀장 고선민 · 2026-08-12
-> 대상: BE 3명 (고선민 · 김민지 · 윤도희)
+> 작성: BE 팀장 선민님 · 2026-08-12
+> 대상: BE 3명 (선민님 · 민지님 · 도희님)
 
 ---
 
@@ -15,7 +15,7 @@
 
 - **충돌 시 계약이 우선한다.** 이 문서가 계약과 어긋나면 이 문서가 틀린 것이다.
 - **변경 절차**
-  - 컨벤션 변경 → BE 팀장(고선민) 승인 후 이 문서 갱신
+  - 컨벤션 변경 → BE 팀장(선민님) 승인 후 이 문서 갱신
   - 계약 변경 → FE 조율 + API 계약서 갱신 (임의 변경 금지)
 - ⚠️ 해커톤 특성상(제출마감 8/21 금 10시) 절차보다 속도가 우선인 지점이 있다. 애매하면 팀 채팅으로 바로 확인하고 진행한다.
 
@@ -35,7 +35,7 @@
 | DB      | MySQL 8 (로컬 = `compose.yaml`)               |
 | 보일러플레이트 | Lombok                                    |
 | API 문서화   | springdoc-openapi-starter-webmvc-ui **3.1.0** (Spring Boot 4.x 전용 라인 — 2.x는 Boot 3용이라 호환 안 됨) |
-| AI 연동   | Charm 이미지 생성용 외부 AI API (모델·엔드포인트는 민지가 journey 도메인 착수 시 확정) |
+| AI 연동   | Charm 이미지 생성용 외부 AI API (모델·엔드포인트는 민지님이 journey 도메인 착수 시 확정) |
 
 - **H2 콘솔 없음.** 로컬 개발 DB는 `docker compose up`으로 MySQL을 띄운다.
 - **H2는 `testRuntimeOnly`로만 남긴다** — Docker 없이 단위/슬라이스 테스트를 돌리기 위함. (§11-4 dialect 주의사항 참고)
@@ -73,22 +73,22 @@ com.example.mcmarchiv
 │   ├── entity/                  BaseTimeEntity
 │   └── util/                    TimeUtils
 │
-├── auth/                        ← 고선민
+├── auth/                        ← 선민님
 │   ├── controller/ service/ dto/
 │
-├── user/                        ← 고선민
+├── user/                        ← 선민님
 │   ├── controller/ service/ repository/ entity/ dto/
 │   (User, RepresentativeBag 포함)
 │
-├── product/                     ← 윤도희
+├── product/                     ← 도희님
 │   ├── controller/ service/ repository/ entity/ dto/
 │   (Product — DPP 등록/조회. journey·care 양쪽에서 참조되는 공용 도메인. care와 같은 사람이 맡아 대기시간 최소화)
 │
-├── journey/                     ← 김민지
+├── journey/                     ← 민지님
 │   ├── controller/ service/ repository/ entity/ dto/
 │   (Charm, CharmImage — AI 참 생성 로직 포함, 비중이 커서 product는 배정하지 않음)
 │
-├── care/                        ← 윤도희
+├── care/                        ← 도희님 (단, CareReport AI진단 파트는 민지님 — 2026-08-12 변경)
 │   ├── controller/ service/ repository/ entity/ dto/
 │   (CareReport, Store, CareReservation, CareNotification)
 │
@@ -108,10 +108,16 @@ com.example.mcmarchiv
 
 ```text
 product/service/
-└── ProductService.java   ← Product 조회·검증(findByIdAndUserId 등)의 단일 창구, 윤도희 소유
+└── ProductService.java   ← Product 조회·검증(findByIdAndUserId 등)의 단일 창구, 도희님 소유
 ```
 
-journey(김민지)는 `ProductService`를 호출만 하고, product 테이블·엔티티에는 직접 접근하지 않는다.
+journey(민지님)은 `ProductService`를 호출만 하고, product 테이블·엔티티에는 직접 접근하지 않는다.
+
+> **예외 (2026-08-12):** `GET /products/scan`(NFC/QR 분기 조회)만 선민님이 담당한다. `product/` 패키지·엔티티·`ProductService` 소유권은 여전히 도희님에게 있으므로, 선민님은 `ProductController`에 `scan` 메서드를 추가하거나 `ProductService` 조회 메서드를 호출하는 선에서 작업하고, 컨트롤러 파일을 같이 건드리게 되면 §2 규칙대로 도희님을 리뷰어로 추가한다.
+
+> **예외 (2026-08-12):** `care/` 패키지 중 AI 진단(`POST /care/reports`, `GET /care/reports/{careId}`)은 민지님이 담당한다. journey에서 이미 AI 이미지 생성 연동을 하고 있어 작업 성격이 비슷해서 옮겼다. `care/` 패키지·엔티티(`Store`, `CareReservation`, `CareNotification`) 소유권은 여전히 도희님에게 있으므로, 민지님은 `CareController`·`CareService`에서 진단 관련 메서드만 작업하고 나머지 파일을 같이 건드리면 §2 규칙대로 도희님을 리뷰어로 추가한다.
+>
+> 이 업무 분배는 2026-08-12 기준 최종안이지만, 진행하면서 필요하면 언제든 재조정할 수 있다.
 
 ---
 
@@ -398,14 +404,15 @@ refactor: ProductService 소유자 조회 스코프화
 
 | 영역 | 패키지 | 오너 | 비고 |
 | ------ | -------------------------------- | ------- | --------------------------- |
-| 로그인/회원가입 | `auth/` | 고선민 | |
-| 마이페이지 | `user/` | 고선민 | RepresentativeBag 선택 포함 |
-| DPP 제품등록/조회 | `product/` | 윤도희 | journey·care 공유 도메인, care와 겸임 |
-| 여정인증/Charm | `journey/` | 김민지 | AI 참 생성 3개 후보 중 1개만 저장 |
-| AI 케어진단/예약/알림 | `care/` | 윤도희 | 소유자 확인은 product join |
+| 로그인/회원가입 | `auth/` | 선민님 | |
+| 마이페이지 | `user/` | 선민님 | RepresentativeBag 선택 포함 |
+| DPP 제품등록/조회 | `product/` | 도희님 | journey·care 공유 도메인, care와 겸임. 단 `GET /products/scan`(NFC/QR)은 **선민님** 담당 (2026-08-12 변경) |
+| 여정인증/Charm | `journey/` | 민지님 | AI 참 생성 3개 후보 중 1개만 저장 |
+| AI 케어진단 | `care/` | 민지님 | 소유자 확인은 product join. 2026-08-12부터 도희님→민지님 |
+| 케어 매장/예약/알림 | `care/` | 도희님 | 소유자 확인은 product join |
 | 스타일링 추천 | `discover/` | 미정 (3순위) | 시간 남으면 |
-| `/health-check` | `global/health/` | 고선민(팀장) | 인증 불필요 |
+| `/health-check` | `global/health/` | 선민님(팀장) | 인증 불필요 |
 
 ---
 
-*작성: BE 팀장 고선민 · 2026-08-12. 변경은 팀장 승인 후 갱신으로만.*
+*작성: BE 팀장 선민님 · 2026-08-12. 변경은 팀장 승인 후 갱신으로만.*
