@@ -1,0 +1,89 @@
+Table users {
+  id bigint [pk, increment]
+  email varchar [unique, not null]
+  password varchar [not null]
+  nickname varchar [not null]
+  profile_image varchar
+  representative_bag_id bigint [ref: > representative_bags.id]
+  created_at datetime
+  updated_at datetime
+}
+
+Table representative_bags {
+  id bigint [pk, increment]
+  name varchar [not null]
+  image_url varchar [not null]
+  is_default boolean [default: false]
+}
+
+Table products {
+  id bigint [pk, increment]
+  user_id bigint [ref: > users.id]
+  product_code varchar [unique, not null]
+  product_name varchar [not null]
+  model_number varchar
+  product_image varchar
+  purchase_date date
+  registered_at datetime
+  is_verified boolean [default: false]
+  created_at datetime
+}
+
+Table charms {
+  id bigint [pk, increment]
+  user_id bigint [ref: > users.id]
+  product_id bigint [ref: > products.id, not null]
+  charm_type varchar
+  country varchar
+  city varchar
+  memo text
+  travel_date date
+  ai_image_url varchar [not null]
+  created_at datetime
+}
+
+Table charm_images {
+  id bigint [pk, increment]
+  charm_id bigint [ref: > charms.id]
+  image_url varchar [not null]
+  image_order int
+}
+
+Table care_reports {
+  id bigint [pk, increment]
+  product_id bigint [ref: > products.id]
+  image_url varchar [not null]
+  scratch_score int
+  stain_score int
+  wear_score int
+  total_score int
+  ai_comment text
+  analyzed_at datetime
+}
+
+Table stores {
+  id bigint [pk, increment]
+  name varchar [not null]
+  address varchar
+  latitude decimal
+  longitude decimal
+  phone varchar
+}
+
+Table care_reservations {
+  id bigint [pk, increment]
+  care_id bigint [ref: > care_reports.id]
+  store_id bigint [ref: > stores.id]
+  reservation_date date [not null]
+  reservation_time time [not null]
+  status varchar [default: 'PENDING']
+  created_at datetime
+}
+
+Table care_notifications {
+  id bigint [pk, increment]
+  product_id bigint [ref: > products.id]
+  target_date date [not null]
+  is_read boolean [default: false]
+  created_at datetime
+}
