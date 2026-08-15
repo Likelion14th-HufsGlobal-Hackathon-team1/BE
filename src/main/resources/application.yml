@@ -18,6 +18,9 @@ cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
 
 ai:
-  charm:
-    api-key: ${AI_CHARM_API_KEY:}
-    endpoint: ${AI_CHARM_ENDPOINT:}
+  gemini:
+    api-key: ${GEMINI_API_KEY}
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  upload-preset: ${CLOUDINARY_UPLOAD_PRESET}
