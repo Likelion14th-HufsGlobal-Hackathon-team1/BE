@@ -20,11 +20,14 @@ public class CareReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "care_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "product_id", nullable = false)
     private Long productId;
+
+    @Column(name = "image_url", nullable = false, length = 1000)
+    private String imageUrl;
 
     @Column(name = "total_score", nullable = false)
     private Integer totalScore;
@@ -44,9 +47,10 @@ public class CareReport {
     @Column(name = "analyzed_at", nullable = false)
     private Instant analyzedAt;
 
-    private CareReport(Long productId, Integer totalScore, Integer scratchScore,
+    private CareReport(Long productId, String imageUrl, Integer totalScore, Integer scratchScore,
                        Integer stainScore, Integer wearScore, String aiComment) {
         this.productId = productId;
+        this.imageUrl = imageUrl;
         this.totalScore = totalScore;
         this.scratchScore = scratchScore;
         this.stainScore = stainScore;
@@ -55,8 +59,8 @@ public class CareReport {
         this.analyzedAt = Instant.now();
     }
 
-    public static CareReport analyze(Long productId, Integer totalScore, Integer scratchScore,
+    public static CareReport analyze(Long productId, String imageUrl, Integer totalScore, Integer scratchScore,
                                      Integer stainScore, Integer wearScore, String aiComment) {
-        return new CareReport(productId, totalScore, scratchScore, stainScore, wearScore, aiComment);
+        return new CareReport(productId, imageUrl, totalScore, scratchScore, stainScore, wearScore, aiComment);
     }
 }

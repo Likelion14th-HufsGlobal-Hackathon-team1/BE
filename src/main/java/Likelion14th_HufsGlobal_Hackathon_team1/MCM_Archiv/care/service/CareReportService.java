@@ -32,7 +32,7 @@ public class CareReportService {
         int total = (scratch + stain + wear) / 3;
 
         CareReport report = CareReport.analyze(
-                request.productId(), total, scratch, stain, wear, buildComment(total)
+                request.productId(), request.imageUrl(), total, scratch, stain, wear, buildComment(total)
         );
 
         return CareReportResponse.from(careReportRepository.save(report));
