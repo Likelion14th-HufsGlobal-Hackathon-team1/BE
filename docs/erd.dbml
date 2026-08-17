@@ -87,3 +87,9 @@ Table care_notifications {
   is_read boolean [default: false]
   created_at datetime
 }
+
+Table discover_styles {
+  id bigint [pk, increment]
+  image_url varchar [not null]
+  caption varchar [not null]
+}
