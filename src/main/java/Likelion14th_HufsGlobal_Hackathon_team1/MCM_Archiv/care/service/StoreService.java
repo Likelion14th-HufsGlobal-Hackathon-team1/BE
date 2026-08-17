@@ -26,6 +26,16 @@ public class StoreService {
         return storeRepository.findAll();
     }
 
+    public Store findById(Long storeId) {
+        return storeRepository.findById(storeId)
+                .orElseThrow(() ->
+                        new BusinessException(
+                                ErrorCode.NOT_FOUND,
+                                "매장을 찾을 수 없습니다."
+                        )
+                );
+    }
+
     public StoreAvailableTimesResponse findAvailableTimes(
             Long storeId,
             LocalDate date
