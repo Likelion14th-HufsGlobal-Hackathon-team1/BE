@@ -92,7 +92,7 @@ com.example.mcmarchiv
 │   ├── controller/ service/ repository/ entity/ dto/
 │   (CareReport, Store, CareReservation, CareNotification)
 │
-└── discover/                    ← 담당 미정(3순위, 시간 남으면)
+└── discover/                    ← 선민님 (3순위, 시간 남으면. 2026-08-17 배정)
     ├── controller/ service/ repository/ entity/ dto/
 ```
 
@@ -235,7 +235,7 @@ public abstract class BaseTimeEntity {
 | 프로파일 | 값 |
 | --- | --- |
 | local | `update` |
-| prod (배포한다면) | **`validate`** |
+| prod | `update` (2026-08-18 결정 — 마이그레이션 도구 없어서 당분간 `update` 유지, 원래는 `validate` 권장) |
 
 ---
 
@@ -410,7 +410,7 @@ refactor: ProductService 소유자 조회 스코프화
 | 여정인증/Charm | `journey/` | 민지님 | AI 참 생성 3개 후보 중 1개만 저장 |
 | AI 케어진단 | `care/` | 민지님 | 소유자 확인은 product join. 2026-08-12부터 도희님→민지님 |
 | 케어 매장/예약/알림 | `care/` | 도희님 | 소유자 확인은 product join |
-| 스타일링 추천 | `discover/` | 미정 (3순위) | 시간 남으면 |
+| 스타일링 추천 | `discover/` | 선민님 (3순위) | 시간 남으면, 2026-08-17 배정 |
 | `/health-check` | `global/health/` | 선민님(팀장) | 인증 불필요 |
 
 ---
