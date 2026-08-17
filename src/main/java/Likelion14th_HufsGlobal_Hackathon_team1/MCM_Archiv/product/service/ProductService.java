@@ -48,4 +48,14 @@ public class ProductService {
                         )
                 );
     }
+
+    public Product findByProductCodeAndUserId(String productCode, Long userId) {
+        return productRepository.findByProductCodeAndUserId(productCode, userId)
+                .orElseThrow(() ->
+                        new BusinessException(
+                                ErrorCode.NOT_FOUND,
+                                "제품을 찾을 수 없습니다."
+                        )
+                );
+    }
 }
