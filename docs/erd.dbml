@@ -1,6 +1,8 @@
 Table users {
   id bigint [pk, increment]
+  name varchar [not null]
   email varchar [unique, not null]
+  login_id varchar [unique, not null]
   password varchar [not null]
   nickname varchar [not null]
   profile_image varchar
@@ -33,7 +35,6 @@ Table charms {
   id bigint [pk, increment]
   user_id bigint [ref: > users.id]
   product_id bigint [ref: > products.id, not null]
-  charm_type varchar
   country varchar
   city varchar
   memo text
@@ -46,7 +47,6 @@ Table charm_images {
   id bigint [pk, increment]
   charm_id bigint [ref: > charms.id]
   image_url varchar [not null]
-  image_order int
 }
 
 Table care_reports {
@@ -72,7 +72,7 @@ Table stores {
 
 Table care_reservations {
   id bigint [pk, increment]
-  care_id bigint [ref: > care_reports.id]
+  care_id bigint [unique, ref: > care_reports.id]
   store_id bigint [ref: > stores.id]
   reservation_date date [not null]
   reservation_time time [not null]

@@ -276,6 +276,8 @@ AI 가방 상태 분석.
   "reservationTime": "15:00", "status": "PENDING"
 }
 ```
+- 비고: **한 CareReport(`careId`)당 예약은 1개만 허용** (`care_id` unique, 2026-08-15 확정)
+- 에러: `400 VALIDATION_FAILED` (이미 해당 `careId`로 예약이 존재하는 경우), `404` (careId/storeId가 없거나 타인 소유)
 
 ### `GET /care/notifications`
 케어 알림 목록 (Care Reminder 팝업용).
