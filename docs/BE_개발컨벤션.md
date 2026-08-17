@@ -228,7 +228,7 @@ public abstract class BaseTimeEntity {
 | `products.user_id`                    | **인덱스 필수** — 유저별 조회                   |
 | `products.product_code`               | **unique** — NFC/QR 매칭키               |
 | `charms.user_id`, `charms.product_id` | **인덱스 필수**                            |
-| `care_reservations.care_id`           | **unique 아님** (한 진단당 여러 예약 이력 허용 여부는 팀 확인) |
+| `care_reservations.care_id`           | **unique** — 한 진단(CareReport)당 예약 1개만 허용 (2026-08-15 확정) |
 
 ### 5-4. `ddl-auto`
 
