@@ -54,4 +54,15 @@ public class ProductController {
 
         return ProductDetailResponse.from(product);
     }
+
+    @GetMapping("/scan")
+    public ProductDetailResponse scan(
+            @LoginUser Long userId,
+            @RequestParam String code
+    ) {
+        Product product =
+                productService.findByProductCodeAndUserId(code, userId);
+
+        return ProductDetailResponse.from(product);
+    }
 }
