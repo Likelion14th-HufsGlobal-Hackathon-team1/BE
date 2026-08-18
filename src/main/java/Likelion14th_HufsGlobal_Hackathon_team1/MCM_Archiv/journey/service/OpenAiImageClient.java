@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class OpenAiImageClient {
 
-    private static final String MODEL = "gpt-image-1";
+    private static final String MODEL = "gpt-image-2";
     private static final String SIZE = "1024x1024";
 
     private final RestClient restClient;
