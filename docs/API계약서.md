@@ -117,6 +117,7 @@ DPP 제품 등록. NFC/QR 태깅 후 신규 제품이면 이 API 호출.
 }
 ```
 - 비고: 최소 1개 제품 등록이 온보딩 필수 조건 (기능명세 확정사항)
+- 비고: 등록 시 `purchaseDate` 기준 **+6개월 시점**의 케어 알림(`CareNotification`)이 자동 생성된다. 이 알림은 `GET /care/notifications`로 조회한다 (2026-08-19 추가)
 
 ### `GET /products`
 내 제품 목록 조회 (여정인증 화면 드롭다운용).
@@ -239,6 +240,7 @@ AI 가방 상태 분석.
   "aiComment": "string", "analyzedAt": "2026-08-12T05:00:00Z"
 }
 ```
+- 에러: `400 VALIDATION_FAILED` — `imageUrl`이 공개적으로 접근 불가능하거나(비공개/깨진 링크 등), AI가 이미지에서 가방을 확인하지 못한 경우. 이 경우 점수를 임의로 지어내지 않고 즉시 에러 반환 (2026-08-19 추가)
 
 ### `GET /care/reports/{careId}` — 담당 민지님
 진단 결과 상세 재조회.
