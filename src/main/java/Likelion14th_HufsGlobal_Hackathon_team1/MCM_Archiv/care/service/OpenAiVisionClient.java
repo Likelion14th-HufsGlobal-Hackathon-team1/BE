@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -52,6 +54,8 @@ public class OpenAiVisionClient {
     }
 
     public CareAnalysisResult analyzeBagImage(String imageUrl) {
+        validateImageAccessible(imageUrl);
+
         ChatRequest request = new ChatRequest(
                 MODEL,
                 List.of(new ChatRequest.Message(
@@ -72,6 +76,31 @@ public class OpenAiVisionClient {
                 .body(ChatResponse.class);
 
         return parseResult(response);
+    }
+
+    private static final String IMAGE_UNREACHABLE_MESSAGE =
+            "이미지 URL에 접근할 수 없습니다. 공개적으로 접근 가능한 이미지 주소인지 확인해주세요.";
+
+    private void validateImageAccessible(String imageUrl) {
+        try {
+            ResponseEntity<Void> response = RestClient.create()
+                    .method(HttpMethod.HEAD)
+                    .uri(imageUrl)
+                    .retrieve()
+                    .toBodilessEntity();
+
+            String contentType = response.getHeaders().getContentType() != null
+                    ? response.getHeaders().getContentType().toString()
+                    : "";
+
+            if (!response.getStatusCode().is2xxSuccessful() || !contentType.startsWith("image/")) {
+                throw new BusinessException(ErrorCode.VALIDATION_FAILED, IMAGE_UNREACHABLE_MESSAGE);
+            }
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.VALIDATION_FAILED, IMAGE_UNREACHABLE_MESSAGE);
+        }
     }
 
     private CareAnalysisResult parseResult(ChatResponse response) {
