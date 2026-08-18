@@ -30,6 +30,17 @@ public class CareNotification {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    private CareNotification(Long productId, LocalDate targetDate) {
+        this.productId = productId;
+        this.targetDate = targetDate;
+        this.isRead = false;
+        this.createdAt = Instant.now();
+    }
+
+    public static CareNotification of(Long productId, LocalDate targetDate) {
+        return new CareNotification(productId, targetDate);
+    }
+
     public void markAsRead() {
         this.isRead = true;
     }

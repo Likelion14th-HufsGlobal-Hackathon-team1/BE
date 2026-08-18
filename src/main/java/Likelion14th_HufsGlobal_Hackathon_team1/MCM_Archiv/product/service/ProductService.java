@@ -5,6 +5,7 @@ import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.global.error.ErrorCode
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.product.entity.Product;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public Product register(
@@ -32,7 +34,10 @@ public class ProductService {
                 purchaseDate
         );
 
-        return productRepository.save(product);
+        Product saved = productRepository.save(product);
+        eventPublisher.publishEvent(new ProductRegisteredEvent(saved.getId(), saved.getPurchaseDate()));
+
+        return saved;
     }
 
     public List<Product> findAllByUserId(Long userId) {
