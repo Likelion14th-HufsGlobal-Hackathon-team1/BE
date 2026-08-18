@@ -27,9 +27,18 @@ public class DiscoverStyleSeeder implements ApplicationRunner {
         }
 
         discoverStyleRepository.saveAll(List.of(
-                DiscoverStyle.of("https://cdn.example.com/discover/style-1.png", "미니멀 오피스룩"),
-                DiscoverStyle.of("https://cdn.example.com/discover/style-2.png", "캐주얼 위켄드룩"),
-                DiscoverStyle.of("https://cdn.example.com/discover/style-3.png", "트래블 무드룩")
+                DiscoverStyle.of(
+                        "https://cdn.media.amplience.net/i/mcmworldwide/PLP_Pina_InGrid_1_D?&fmt=auto&qlt=default",
+                        "미니멀 오피스룩"
+                ),
+                DiscoverStyle.of(
+                        "https://images.mcmworldwide.com/i/mcmworldwide/DOITMYWAYSN296_01/-multi-?$w700$&fmt=auto&qlt=default",
+                        "캐주얼 위켄드룩"
+                ),
+                DiscoverStyle.of(
+                        "https://cdn.media.amplience.net/i/mcmworldwide/PLP_NewArrivalsMen_InGrid_1_D?&fmt=auto&qlt=default",
+                        "트래블 무드룩"
+                )
         ));
     }
 }

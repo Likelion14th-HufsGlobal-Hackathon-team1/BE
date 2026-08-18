@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.global.security.JwtProvider;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.service.CloudinaryImageUploader;
-import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.service.OpenAiImageClient;
+import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.service.GeminiImageClient;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.user.entity.User;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,14 +51,14 @@ class CoreLoopE2ETest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @MockitoBean
-    private OpenAiImageClient openAiImageClient;
+    private GeminiImageClient geminiImageClient;
 
     @MockitoBean
     private CloudinaryImageUploader cloudinaryImageUploader;
 
     @Test
     void 제품등록_여정인증_참생성_조회_전체_흐름이_동작한다() throws Exception {
-        when(openAiImageClient.generateImageBase64(anyString())).thenReturn("ZmFrZS1pbWFnZS1ieXRlcw==");
+        when(geminiImageClient.generateImageBase64(anyString())).thenReturn("ZmFrZS1pbWFnZS1ieXRlcw==");
         when(cloudinaryImageUploader.upload(anyString())).thenReturn("https://cdn.example.com/charm-candidate.png");
 
         User user = userRepository.save(User.register(

@@ -20,6 +20,8 @@ cors:
 ai:
   openai:
     api-key: ${OPENAI_API_KEY}
+  gemini:
+    api-key: ${GEMINI_API_KEY}
 
 cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
