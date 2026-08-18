@@ -28,13 +28,15 @@ public class CharmCandidateImageService {
         String memoLine = (memo == null || memo.isBlank()) ? "a memorable trip" : memo;
 
         return """
-                A luxury bag charm keyring pendant representing a trip to %s, %s.
-                Design a distinctive charm motif inspired by a landmark or cultural symbol
-                of the destination, styled to reflect this travel memory: "%s".
-                Elegant enamel-style charm with a refined gold-trimmed border and a small
-                metal attachment ring at the top, isolated on a soft neutral background,
-                studio product photography lighting, square composition.
-                Absolutely no text, no letters, no logos, no brand marks of any kind.
+                A single luxury enamel charm pendant representing a trip to %s, %s, in a
+                distinctive pendant silhouette shape (not a plain rectangle), with a
+                refined gold-trimmed border. Design a motif inspired by a landmark or
+                cultural symbol of the destination, styled to reflect this travel memory:
+                "%s".
+                Flat product illustration on a solid pure white (#FFFFFF) background,
+                no shadow, no gradient, no vignette, hard clean edges, square composition.
+                Absolutely no text, no letters, no logos, no brand marks, no keyring ring,
+                no chain, no hardware — only the charm pendant face itself.
                 """.formatted(city, country, memoLine);
     }
 }
