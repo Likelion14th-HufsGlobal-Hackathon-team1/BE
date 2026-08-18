@@ -87,6 +87,7 @@ public class OpenAiVisionClient {
         record Message(String role, List<Content> content) {
         }
 
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         record Content(String type, String text, @JsonProperty("image_url") ImageUrl imageUrl) {
         }
 
