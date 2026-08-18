@@ -2,7 +2,6 @@ package Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.service;
 
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.dto.JourneyVerifyRequest;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.dto.JourneyVerifyResponse;
-import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.product.entity.Product;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,10 +19,10 @@ public class JourneyService {
     private final CharmCandidateImageService charmCandidateImageService;
 
     public JourneyVerifyResponse verifyJourney(Long userId, JourneyVerifyRequest request) {
-        Product product = productService.findByIdAndUserId(request.productId(), userId);
+        productService.findByIdAndUserId(request.productId(), userId);
 
         List<String> imageUrls = charmCandidateImageService.generateCandidateImageUrls(
-                request.country(), request.city(), product.getProductName()
+                request.country(), request.city(), request.memo()
         );
 
         return JourneyVerifyResponse.from(imageUrls);
