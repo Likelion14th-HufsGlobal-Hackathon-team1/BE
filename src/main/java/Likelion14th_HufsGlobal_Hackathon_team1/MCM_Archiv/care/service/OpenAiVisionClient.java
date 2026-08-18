@@ -21,10 +21,23 @@ public class OpenAiVisionClient {
     private static final String MODEL = "gpt-4.1-mini";
 
     private static final String PROMPT = """
-            이 명품 가방 이미지를 보고 상태를 분석해줘.
-            scratchScore(스크래치), stainScore(얼룩), wearScore(마모)를 각각 0~100 사이 정수로 평가하고,
-            comment에 상태에 대한 한국어 한 줄 코멘트를 작성해서 아래 JSON 형식으로만 답해:
-            {"scratchScore": 0, "stainScore": 0, "wearScore": 0, "comment": "string"}
+            당신은 명품 가방 상태를 감정하는 전문가입니다. 아래 이미지를 최대한 엄격하고 객관적으로 평가하세요.
+
+            먼저 이미지에서 가방이 명확하게 보이는지 확인하세요.
+            - 가방이 안 보이거나, 이미지를 불러올 수 없거나, 가방인지 확신할 수 없으면
+              "visible": false 로 응답하고 나머지 점수는 전부 0, comment는 빈 문자열로 채우세요.
+              절대 보이지 않는 내용을 지어내지 마세요.
+            - 가방이 명확히 보이면 "visible": true 로 하고 아래 기준으로 평가하세요.
+
+            점수 기준 (0~100, 높을수록 좋은 상태). 관대하게 주지 말고 실제로 보이는 손상 기준으로 엄격하게 채점하세요:
+            - scratchScore: 스크래치가 거의 없으면 90 이상, 약간 있으면 60~80, 눈에 띄게 많으면 40 이하
+            - stainScore: 얼룩이 거의 없으면 90 이상, 약간 있으면 60~80, 눈에 띄면 40 이하
+            - wearScore: 마모가 거의 없으면 90 이상, 약간 있으면 60~80, 많이 낡았으면 40 이하
+
+            comment에는 상태에 대한 한국어 한 줄 코멘트를 작성하세요.
+
+            아래 JSON 형식으로만 답하세요:
+            {"visible": true, "scratchScore": 0, "stainScore": 0, "wearScore": 0, "comment": "string"}
             """;
 
     private final RestClient restClient;
@@ -68,14 +81,24 @@ public class OpenAiVisionClient {
 
         String content = response.choices().get(0).message().content();
 
+        CareAnalysisResult result;
         try {
-            return objectMapper.readValue(content, CareAnalysisResult.class);
+            result = objectMapper.readValue(content, CareAnalysisResult.class);
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.INTERNAL_ERROR, "AI 분석 결과를 해석할 수 없습니다.");
         }
+
+        if (!result.visible()) {
+            throw new BusinessException(
+                    ErrorCode.VALIDATION_FAILED,
+                    "이미지에서 가방을 확인할 수 없습니다. 접근 가능한 이미지 URL인지 확인해주세요."
+            );
+        }
+
+        return result;
     }
 
-    public record CareAnalysisResult(int scratchScore, int stainScore, int wearScore, String comment) {
+    public record CareAnalysisResult(boolean visible, int scratchScore, int stainScore, int wearScore, String comment) {
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
