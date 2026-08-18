@@ -27,4 +27,34 @@ public class Store {
     private BigDecimal longitude;
 
     private String phone;
+
+    private Store(
+            String name,
+            String address,
+            BigDecimal latitude,
+            BigDecimal longitude,
+            String phone
+    ) {
+        this.name = name;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.phone = phone;
+    }
+
+    public static Store of(
+            String name,
+            String address,
+            BigDecimal latitude,
+            BigDecimal longitude,
+            String phone
+    ) {
+        return new Store(
+                name,
+                address,
+                latitude,
+                longitude,
+                phone
+        );
+    }
 }
