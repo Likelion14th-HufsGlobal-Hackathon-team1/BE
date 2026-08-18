@@ -9,8 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.global.security.JwtProvider;
+import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.service.CloudflareImageClient;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.service.CloudinaryImageUploader;
-import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.service.GeminiImageClient;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.user.entity.User;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 코어 루프 E2E (컨벤션 §11): 제품등록 → 여정인증 → 참생성 → 조회.
- * AI 이미지 생성(Gemini)·업로드(Cloudinary)는 외부 API라 MockitoBean으로 대체.
+ * AI 이미지 생성(Cloudflare)·업로드(Cloudinary)는 외부 API라 MockitoBean으로 대체.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -51,14 +51,14 @@ class CoreLoopE2ETest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @MockitoBean
-    private GeminiImageClient geminiImageClient;
+    private CloudflareImageClient cloudflareImageClient;
 
     @MockitoBean
     private CloudinaryImageUploader cloudinaryImageUploader;
 
     @Test
     void 제품등록_여정인증_참생성_조회_전체_흐름이_동작한다() throws Exception {
-        when(geminiImageClient.generateImageBase64(anyString())).thenReturn("ZmFrZS1pbWFnZS1ieXRlcw==");
+        when(cloudflareImageClient.generateImageBase64(anyString())).thenReturn("ZmFrZS1pbWFnZS1ieXRlcw==");
         when(cloudinaryImageUploader.upload(anyString())).thenReturn("https://cdn.example.com/charm-candidate.png");
 
         User user = userRepository.save(User.register(

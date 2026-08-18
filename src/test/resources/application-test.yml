@@ -16,8 +16,9 @@ jwt:
 ai:
   openai:
     api-key: test-dummy-openai-key
-  gemini:
-    api-key: test-dummy-gemini-key
+  cloudflare:
+    account-id: test-dummy-account-id
+    api-token: test-dummy-api-token
 
 cloudinary:
   cloud-name: test-dummy-cloud-name
