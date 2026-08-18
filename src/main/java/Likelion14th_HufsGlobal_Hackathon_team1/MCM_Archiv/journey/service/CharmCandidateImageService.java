@@ -12,14 +12,14 @@ public class CharmCandidateImageService {
 
     private static final int CANDIDATE_COUNT = 3;
 
-    private final GeminiImageClient geminiImageClient;
+    private final OpenAiImageClient openAiImageClient;
     private final CloudinaryImageUploader imageUploader;
 
     public List<String> generateCandidateImageUrls(String country, String city, String productName) {
         String prompt = buildPrompt(country, city, productName);
 
         return IntStream.range(0, CANDIDATE_COUNT)
-                .mapToObj(i -> geminiImageClient.generateImageBase64(prompt))
+                .mapToObj(i -> openAiImageClient.generateImageBase64(prompt))
                 .map(imageUploader::upload)
                 .toList();
     }
