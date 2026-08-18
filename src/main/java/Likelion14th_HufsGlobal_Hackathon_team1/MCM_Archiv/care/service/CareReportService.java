@@ -11,9 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.ThreadLocalRandom;
-
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -21,18 +18,18 @@ public class CareReportService {
 
     private final CareReportRepository careReportRepository;
     private final ProductService productService;
+    private final OpenAiVisionClient openAiVisionClient;
 
     @Transactional
     public CareReportResponse createReport(Long userId, CareReportCreateRequest request) {
         productService.findByIdAndUserId(request.productId(), userId);
 
-        int scratch = randomScore();
-        int stain = randomScore();
-        int wear = randomScore();
-        int total = (scratch + stain + wear) / 3;
+        OpenAiVisionClient.CareAnalysisResult result = openAiVisionClient.analyzeBagImage(request.imageUrl());
+        int total = (result.scratchScore() + result.stainScore() + result.wearScore()) / 3;
 
         CareReport report = CareReport.analyze(
-                request.productId(), request.imageUrl(), total, scratch, stain, wear, buildComment(total)
+                request.productId(), request.imageUrl(), total,
+                result.scratchScore(), result.stainScore(), result.wearScore(), result.comment()
         );
 
         return CareReportResponse.from(careReportRepository.save(report));
@@ -45,15 +42,5 @@ public class CareReportService {
         productService.findByIdAndUserId(report.getProductId(), userId);
 
         return CareReportResponse.from(report);
-    }
-
-    private int randomScore() {
-        return ThreadLocalRandom.current().nextInt(70, 101);
-    }
-
-    private String buildComment(int total) {
-        if (total >= 90) return "전반적으로 관리가 잘 된 상태입니다.";
-        if (total >= 80) return "가벼운 마모가 보이지만 양호한 상태입니다.";
-        return "케어가 필요한 상태입니다. 매장 방문을 권장드려요.";
     }
 }
