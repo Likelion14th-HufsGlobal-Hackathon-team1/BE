@@ -251,7 +251,7 @@ AI 가방 상태 분석.
 
 - Response `200`
 ```json
-{ "stores": [ { "storeId": 1, "name": "레푸스 경기광주경안점", "address": "string", "phone": "string" } ] }
+{ "stores": [ { "storeId": 1, "name": "MCM 롯데백화점 본점", "address": "string", "phone": "string", "distanceKm": 1.38 } ] }
 ```
 
 ### `GET /stores/{storeId}/available-times?date={date}`

@@ -8,27 +8,25 @@ public record StoreListResponse(
         List<StoreItem> stores
 ) {
 
-    public static StoreListResponse from(List<Store> stores) {
-        return new StoreListResponse(
-                stores.stream()
-                        .map(StoreItem::from)
-                        .toList()
-        );
+    public static StoreListResponse from(List<StoreItem> stores) {
+        return new StoreListResponse(stores);
     }
 
     public record StoreItem(
             Long storeId,
             String name,
             String address,
-            String phone
+            String phone,
+            double distanceKm
     ) {
 
-        public static StoreItem from(Store store) {
+        public static StoreItem from(Store store, double distanceKm) {
             return new StoreItem(
                     store.getId(),
                     store.getName(),
                     store.getAddress(),
-                    store.getPhone()
+                    store.getPhone(),
+                    distanceKm
             );
         }
     }

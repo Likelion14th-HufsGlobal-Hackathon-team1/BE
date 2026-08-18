@@ -1,6 +1,7 @@
 package Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.service;
 
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.dto.StoreAvailableTimesResponse;
+import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.dto.StoreListResponse;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.entity.Store;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.repository.CareReservationRepository;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.repository.StoreRepository;
@@ -32,7 +33,7 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final CareReservationRepository careReservationRepository;
 
-    public List<Store> findAllByDistance(
+    public List<StoreListResponse.StoreItem> findAllByDistance(
             BigDecimal latitude,
             BigDecimal longitude
     ) {
@@ -56,7 +57,12 @@ public class StoreService {
                 .sorted((store1, store2) ->
                         Double.compare(store1.distance(), store2.distance())
                 )
-                .map(StoreDistance::store)
+                .map(storeDistance ->
+                        StoreListResponse.StoreItem.from(
+                                storeDistance.store(),
+                                storeDistance.distance()
+                        )
+                )
                 .toList();
     }
 
