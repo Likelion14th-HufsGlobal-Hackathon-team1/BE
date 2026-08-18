@@ -23,7 +23,7 @@ public class StoreController {
             @RequestParam BigDecimal lng
     ) {
         return StoreListResponse.from(
-                storeService.findAll()
+                storeService.findAllByDistance(lat, lng)
         );
     }
 

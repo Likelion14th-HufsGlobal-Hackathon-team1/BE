@@ -28,10 +28,29 @@ public class CareReservationService {
 
         storeService.findById(request.storeId());
 
+        if (!storeService.isValidReservationTime(request.reservationTime())) {
+            throw new BusinessException(
+                    ErrorCode.VALIDATION_FAILED,
+                    "예약 가능한 시간은 08:00부터 18:00까지 30분 단위입니다."
+            );
+        }
+
         if (careReservationRepository.existsByCareId(request.careId())) {
             throw new BusinessException(
                     ErrorCode.VALIDATION_FAILED,
                     "이미 해당 진단 결과로 예약이 존재합니다."
+            );
+        }
+
+        if (careReservationRepository
+                .existsByStoreIdAndReservationDateAndReservationTime(
+                        request.storeId(),
+                        request.reservationDate(),
+                        request.reservationTime()
+                )) {
+            throw new BusinessException(
+                    ErrorCode.VALIDATION_FAILED,
+                    "이미 예약된 시간입니다."
             );
         }
 
