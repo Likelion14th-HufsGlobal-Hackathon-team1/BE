@@ -246,6 +246,19 @@ AI 가방 상태 분석.
 - Response `200`: 위와 동일 형태
 - 에러: `404`
 
+### `GET /care/reports` — 담당 선민님 (2026-08-18 추가)
+내 케어 진단 이력 목록 (예약 화면 "CARE ITEM" 선택용).
+
+- Response `200`
+```json
+{
+  "reports": [
+    { "careId": 5, "totalScore": 86, "analyzedAt": "2026-08-12T05:00:00Z",
+      "product": { "productId": 1, "productName": "Aren Shopper" } }
+  ]
+}
+```
+
 ### `GET /stores?lat={lat}&lng={lng}`
 근처 매장 목록 (케어예약 화면 진입 시).
 

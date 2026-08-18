@@ -1,6 +1,7 @@
 package Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.controller;
 
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.dto.CareReportCreateRequest;
+import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.dto.CareReportListResponse;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.dto.CareReportResponse;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.service.CareReportService;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.global.security.LoginUser;
@@ -28,5 +29,10 @@ public class CareReportController {
     @GetMapping("/{careId}")
     public CareReportResponse findReport(@LoginUser Long userId, @PathVariable Long careId) {
         return careReportService.findReport(userId, careId);
+    }
+
+    @GetMapping
+    public CareReportListResponse findAll(@LoginUser Long userId) {
+        return careReportService.findAllReports(userId);
     }
 }

@@ -1,12 +1,19 @@
 package Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.service;
 
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.dto.CareReportCreateRequest;
+import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.dto.CareReportListResponse;
+import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.dto.CareReportListResponse.CareReportListItem;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.dto.CareReportResponse;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.entity.CareReport;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.care.repository.CareReportRepository;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.global.error.BusinessException;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.global.error.ErrorCode;
+import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.product.entity.Product;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.product.service.ProductService;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,5 +49,23 @@ public class CareReportService {
         productService.findByIdAndUserId(report.getProductId(), userId);
 
         return CareReportResponse.from(report);
+    }
+
+    public CareReportListResponse findAllReports(Long userId) {
+        List<Product> products = productService.findAllByUserId(userId);
+        Map<Long, Product> productById = products.stream()
+                .collect(Collectors.toMap(Product::getId, Function.identity()));
+
+        if (productById.isEmpty()) {
+            return new CareReportListResponse(List.of());
+        }
+
+        List<CareReportListItem> items = careReportRepository
+                .findAllByProductIdInOrderByAnalyzedAtDesc(List.copyOf(productById.keySet()))
+                .stream()
+                .map(report -> CareReportListItem.from(report, productById.get(report.getProductId())))
+                .toList();
+
+        return new CareReportListResponse(items);
     }
 }
