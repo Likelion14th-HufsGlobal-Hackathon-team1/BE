@@ -38,6 +38,10 @@ public class CharmCandidateImageService {
                 Depict an artistic scene of landmarks and scenery from %s, %s, in a warm,
                 colorful, elegant illustrative style, evoking this memory: "%s".
                 No logos, no brand marks.
+                Focus on architecture, landmarks, nature, and scenery rather than people.
+                If people appear at all, they must be depicted respectfully and neutrally —
+                absolutely no racial or ethnic caricatures, no stereotypical or exaggerated
+                cultural depictions, no offensive imagery of any kind.
                 """.formatted(city, country, memoLine);
     }
 }
