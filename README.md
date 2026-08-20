@@ -21,10 +21,18 @@ Likelion 14th HUFS Global 해커톤(SJF 트랙) 출품작 — 팀 원픽.
 | ORM | Spring Data JPA |
 | 인증 | Spring Security + JWT (jjwt) |
 | API 문서 | springdoc-openapi (Swagger UI) |
-| AI | Google Gemini (`gemini-2.5-flash-image`, 참 이미지 생성), OpenAI (`gpt-4.1-mini`, 케어 상태 비전 분석) |
 | 이미지 저장 | Cloudinary (FE가 직접 업로드, BE는 URL만 수신) |
 | 배포 | Docker Compose, Gabia Cloud VM, Cloudflare Tunnel(HTTPS) |
 | CI/CD | GitHub Actions (master push 시 자동 배포) |
+
+## AI 스택
+
+| 모델 | 용도 | 비고 |
+| --- | --- | --- |
+| **Google Gemini** (`gemini-2.5-flash-image`, Nano Banana) | 여정인증 시 참(Charm) 이미지 후보 3개 생성 | 도시별 랜드마크·여행 메모를 반영한 정사각형 일러스트, 텍스트/로고 미포함 프롬프트 설계, 사용자 여행 사진을 멀티모달 참고 이미지로 활용 |
+| **OpenAI** (`gpt-4.1-mini`) | 케어 진단 시 가방 상태 비전 분석 | 업로드된 가방 사진에서 스크래치/오염/마모 점수 산출, 가방이 식별 안 되면 임의 점수 없이 에러 반환 |
+
+두 모델 모두 이미지를 직접 받지 않고 **Cloudinary 공개 URL**만 입력으로 사용하며, 서버가 외부 URL을 직접 호출하는 지점(참고 이미지 fetch, 진단 이미지 검증)에는 `res.cloudinary.com` 호스트로 제한한 SSRF 방어가 적용되어 있습니다.
 
 ## 프로젝트 구조
 
