@@ -5,6 +5,7 @@ import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.global.error.ErrorCode
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -80,8 +81,12 @@ public class OpenAiVisionClient {
 
     private static final String IMAGE_UNREACHABLE_MESSAGE =
             "이미지 URL에 접근할 수 없습니다. 공개적으로 접근 가능한 이미지 주소인지 확인해주세요.";
+    private static final String ALLOWED_IMAGE_HOST = "res.cloudinary.com";
 
     private void validateImageAccessible(String imageUrl) {
+        if (!isAllowedImageUrl(imageUrl)) {
+            throw new BusinessException(ErrorCode.VALIDATION_FAILED, IMAGE_UNREACHABLE_MESSAGE);
+        }
         try {
             ResponseEntity<Void> response = RestClient.create()
                     .method(HttpMethod.HEAD)
@@ -100,6 +105,16 @@ public class OpenAiVisionClient {
             throw e;
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.VALIDATION_FAILED, IMAGE_UNREACHABLE_MESSAGE);
+        }
+    }
+
+    private boolean isAllowedImageUrl(String imageUrl) {
+        try {
+            URI uri = URI.create(imageUrl);
+            return "https".equalsIgnoreCase(uri.getScheme())
+                    && ALLOWED_IMAGE_HOST.equalsIgnoreCase(uri.getHost());
+        } catch (Exception e) {
+            return false;
         }
     }
 

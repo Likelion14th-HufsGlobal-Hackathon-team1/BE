@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.net.URI;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -15,6 +16,7 @@ import java.util.stream.IntStream;
 public class CharmCandidateImageService {
 
     private static final int CANDIDATE_COUNT = 3;
+    private static final String ALLOWED_REFERENCE_IMAGE_HOST = "res.cloudinary.com";
 
     private static final List<String> VARIATION_HINTS = List.of(
             "Center the composition on the city's single most iconic landmark, in bright "
@@ -34,6 +36,7 @@ public class CharmCandidateImageService {
         ReferenceImage reference = fetchReferenceImage(imageUrls);
 
         return IntStream.range(0, CANDIDATE_COUNT)
+                .parallel()
                 .mapToObj(i -> buildPrompt(country, city, memo, VARIATION_HINTS.get(i), reference != null))
                 .map(prompt -> reference == null
                         ? geminiImageClient.generateImageBase64(prompt)
@@ -43,7 +46,7 @@ public class CharmCandidateImageService {
     }
 
     private ReferenceImage fetchReferenceImage(List<String> imageUrls) {
-        if (imageUrls == null || imageUrls.isEmpty()) {
+        if (imageUrls == null || imageUrls.isEmpty() || !isAllowedReferenceImageUrl(imageUrls.get(0))) {
             return null;
         }
         try {
@@ -63,6 +66,16 @@ public class CharmCandidateImageService {
         }
     }
 
+    private boolean isAllowedReferenceImageUrl(String url) {
+        try {
+            URI uri = URI.create(url);
+            return "https".equalsIgnoreCase(uri.getScheme())
+                    && ALLOWED_REFERENCE_IMAGE_HOST.equalsIgnoreCase(uri.getHost());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private record ReferenceImage(String mimeType, String base64Data) {}
 
     private String buildPrompt(String country, String city, String memo, String variationHint, boolean hasReferenceImage) {
@@ -71,69 +84,30 @@ public class CharmCandidateImageService {
                 : "Use this travel memory as contextual guidance: " + memo;
 
         String referenceSection = hasReferenceImage
-                ? """
-
-                REFERENCE IMAGE:
-                Use the attached reference image only as supporting visual guidance for
-                mood, scenery, or composition when relevant. Do not copy it literally. If
-                it conflicts with the specified city, prioritize the city identity above.
-                Never reproduce any text, signage, logos, or branded elements visible in
-                the reference image.
-                Ignore the reference image's own aspect ratio, framing, borders, or
-                letterboxing entirely — the FULL-BLEED COMPOSITION rule above still applies
-                regardless of the reference image's shape. Never carry over any border,
-                margin, or frame from the reference image.
-                """
+                ? " Use the attached reference photo only for mood/composition guidance, "
+                + "not a literal copy; ignore its aspect ratio and borders; never reproduce "
+                + "its text or logos; if it conflicts with the city, the city wins."
                 : "";
 
-        return ("""
-                CRITICAL CONSTRAINTS:
-                The image must contain absolutely no text or typography of any kind.
-                No letters, words, numbers, captions, labels, readable or unreadable
-                writing, pseudo-text, fake lettering, storefront lettering, street-sign
-                text, neon-sign text, posters, banners, watermarks, signatures, or
-                logo-like marks. Avoid branded storefronts, recognizable commercial
-                signage, and trademark-like visual branding.
+        return """
+                No text/letters/numbers/logos/watermarks anywhere, including signage —
+                render neon/signage areas as abstract glowing color blocks, not lettering.
+                Fill the entire square canvas edge-to-edge: no border, frame, margin, card,
+                badge, medallion, or canvas/print/poster mockup styling.
 
-                FULL-BLEED COMPOSITION:
-                Create a square illustration that fills the entire canvas edge to edge.
-                The illustrated scene itself must reach all four edges. No border, frame,
-                margin, ring, card, badge, sticker, postcard, medallion, icon container,
-                or framed-picture composition. Do not show the illustration as an object
-                placed on another background.
+                Depict %s, %s specifically — real local architecture, streetscape, and
+                scenery, not generic country imagery or landmarks borrowed from another
+                city. If unsure of a specific landmark, use general local atmosphere
+                instead of inventing one.
 
-                LOCATION:
-                Depict a scene specifically recognizable as %s, %s.
-                Prioritize architecture, streetscape, landmarks, public spaces, natural
-                scenery, urban character, terrain, vegetation, and waterways strongly
-                associated with this specific city — not just generic imagery of the
-                country.
-                Do not substitute landmarks or visual features from another city simply
-                because they are famous within the same country. If uncertain about a
-                specific landmark, prefer characteristic local architecture, streetscape,
-                or atmosphere rather than inventing or borrowing a landmark from another
-                city.
-                Create a cohesive city scene rather than a single isolated landmark icon.
+                %s Reflect it through season, weather, time of day, and mood; never render
+                it as text.
 
-                TRAVEL MEMORY:
-                %s
-                Reflect it naturally through the scene, season, weather, time of day,
-                activity, composition, and colors when appropriate. Never display, quote,
-                translate, spell out, or otherwise render this memory as text.
+                Warm, colorful, polished travel illustration, vivid and specific rather
+                than a generic poster. Primarily architecture/scenery; people optional,
+                depicted respectfully with no caricatures or stereotypes.
 
-                STYLE:
-                Warm, colorful, polished travel illustration with clean composition and
-                rich environmental detail. The final image should feel like a vivid travel
-                memory, not a generic city poster. No logos or brand marks.
-
-                PEOPLE:
-                Focus primarily on architecture, landmarks, nature, streets, and scenery.
-                People are optional and secondary. If people appear, portray them
-                naturally, respectfully, and neutrally — no racial or ethnic caricatures,
-                exaggerated cultural stereotypes, or offensive depictions.
-
-                VARIATION:
-                %s
-                """ + referenceSection).formatted(city, country, memorySection, variationHint);
+                %s%s
+                """.formatted(city, country, memorySection, variationHint, referenceSection);
     }
 }
