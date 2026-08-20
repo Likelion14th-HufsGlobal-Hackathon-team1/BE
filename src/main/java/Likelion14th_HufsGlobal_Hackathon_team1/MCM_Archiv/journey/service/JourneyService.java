@@ -21,10 +21,10 @@ public class JourneyService {
     public JourneyVerifyResponse verifyJourney(Long userId, JourneyVerifyRequest request) {
         productService.findByIdAndUserId(request.productId(), userId);
 
-        List<String> imageUrls = charmCandidateImageService.generateCandidateImageUrls(
-                request.country(), request.city(), request.memo()
+        List<String> candidateImageUrls = charmCandidateImageService.generateCandidateImageUrls(
+                request.country(), request.city(), request.memo(), request.imageUrls()
         );
 
-        return JourneyVerifyResponse.from(imageUrls);
+        return JourneyVerifyResponse.from(candidateImageUrls);
     }
 }

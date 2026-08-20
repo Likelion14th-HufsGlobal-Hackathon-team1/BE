@@ -2,11 +2,13 @@ package Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.service;
 
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.global.error.BusinessException;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.global.error.ErrorCode;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,7 +29,11 @@ public class GeminiImageClient {
     }
 
     public String generateImageBase64(String prompt) {
-        GeminiRequest request = GeminiRequest.of(prompt);
+        return generateImageBase64(prompt, null, null);
+    }
+
+    public String generateImageBase64(String prompt, String referenceImageMimeType, String referenceImageBase64) {
+        GeminiRequest request = GeminiRequest.of(prompt, referenceImageMimeType, referenceImageBase64);
 
         GeminiResponse response = restClient.post()
                 .header("x-goog-api-key", apiKey)
@@ -52,14 +58,29 @@ public class GeminiImageClient {
     }
 
     private record GeminiRequest(List<ReqContent> contents, GenerationConfig generationConfig) {
-        static GeminiRequest of(String prompt) {
+        static GeminiRequest of(String prompt, String referenceImageMimeType, String referenceImageBase64) {
+            List<ReqPart> parts = new ArrayList<>();
+            parts.add(ReqPart.text(prompt));
+            if (referenceImageBase64 != null) {
+                parts.add(ReqPart.image(referenceImageMimeType, referenceImageBase64));
+            }
             return new GeminiRequest(
-                    List.of(new ReqContent(List.of(new ReqPart(prompt)))),
+                    List.of(new ReqContent(parts)),
                     new GenerationConfig(List.of("IMAGE"), TEMPERATURE)
             );
         }
         record ReqContent(List<ReqPart> parts) {}
-        record ReqPart(String text) {}
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        record ReqPart(String text, InlineDataPart inlineData) {
+            static ReqPart text(String text) {
+                return new ReqPart(text, null);
+            }
+            static ReqPart image(String mimeType, String data) {
+                return new ReqPart(null, new InlineDataPart(mimeType, data));
+            }
+        }
+        record InlineDataPart(String mimeType, String data) {}
         record GenerationConfig(List<String> responseModalities, Double temperature) {}
     }
 
