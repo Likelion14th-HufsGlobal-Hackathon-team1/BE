@@ -26,6 +26,8 @@ public class ProductService {
             String productCode,
             String productName,
             String productImage,
+            String nickname,
+            String memoryCapsule,
             LocalDate purchaseDate
     ) {
         Product product = Product.register(
@@ -33,6 +35,8 @@ public class ProductService {
                 productCode,
                 productName,
                 productImage,
+                nickname,
+                memoryCapsule,
                 purchaseDate
         );
 

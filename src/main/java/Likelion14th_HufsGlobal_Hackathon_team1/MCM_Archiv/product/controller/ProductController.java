@@ -30,6 +30,8 @@ public class ProductController {
                 request.productCode(),
                 request.productName(),
                 request.productImage(),
+                request.nickname(),
+                request.memoryCapsule(),
                 request.purchaseDate()
         );
 

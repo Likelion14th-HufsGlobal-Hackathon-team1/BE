@@ -15,6 +15,10 @@ public record ProductRegisterRequest(
 
         String productImage,
 
+        String nickname,
+
+        String memoryCapsule,
+
         @NotNull
         LocalDate purchaseDate
 

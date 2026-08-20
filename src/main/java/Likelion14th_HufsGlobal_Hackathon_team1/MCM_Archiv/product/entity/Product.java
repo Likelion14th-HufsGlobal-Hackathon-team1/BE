@@ -38,6 +38,12 @@ public class Product {
     @Column(name = "product_image")
     private String productImage;
 
+    @Column(name = "nickname")
+    private String nickname;
+
+    @Column(name = "memory_capsule", length = 1000)
+    private String memoryCapsule;
+
     @Column(name = "purchase_date")
     private LocalDate purchaseDate;
 
@@ -55,6 +61,8 @@ public class Product {
             String productCode,
             String productName,
             String productImage,
+            String nickname,
+            String memoryCapsule,
             LocalDate purchaseDate
     ) {
         Instant now = Instant.now();
@@ -63,6 +71,8 @@ public class Product {
         this.productCode = productCode;
         this.productName = productName;
         this.productImage = productImage;
+        this.nickname = nickname;
+        this.memoryCapsule = memoryCapsule;
         this.purchaseDate = purchaseDate;
         this.registeredAt = now;
         this.createdAt = now;
@@ -74,6 +84,8 @@ public class Product {
             String productCode,
             String productName,
             String productImage,
+            String nickname,
+            String memoryCapsule,
             LocalDate purchaseDate
     ) {
         return new Product(
@@ -81,6 +93,8 @@ public class Product {
                 productCode,
                 productName,
                 productImage,
+                nickname,
+                memoryCapsule,
                 purchaseDate
         );
     }

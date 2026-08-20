@@ -10,6 +10,8 @@ public record ProductDetailResponse(
         String productName,
         String productCode,
         String productImage,
+        String nickname,
+        String memoryCapsule,
         LocalDate purchaseDate,
         Instant registeredAt,
         boolean isVerified
@@ -21,6 +23,8 @@ public record ProductDetailResponse(
                 product.getProductName(),
                 product.getProductCode(),
                 product.getProductImage(),
+                product.getNickname(),
+                product.getMemoryCapsule(),
                 product.getPurchaseDate(),
                 product.getRegisteredAt(),
                 product.isVerified()

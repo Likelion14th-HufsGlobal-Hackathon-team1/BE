@@ -25,6 +25,8 @@ Table products {
   product_name varchar [not null]
   model_number varchar
   product_image varchar
+  nickname varchar
+  memory_capsule text
   purchase_date date
   registered_at datetime
   is_verified boolean [default: false]

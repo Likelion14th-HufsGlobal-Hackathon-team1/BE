@@ -107,16 +107,20 @@ DPP 제품 등록. NFC/QR 태깅 후 신규 제품이면 이 API 호출.
 
 - Request
 ```json
-{ "productCode": "MCM-XXXXX", "productName": "Aren Shopper", "productImage": "url", "purchaseDate": "2026-08-11" }
+{
+  "productCode": "MCM-XXXXX", "productName": "Aren Shopper", "productImage": "url",
+  "nickname": "string", "memoryCapsule": "string", "purchaseDate": "2026-08-11"
+}
 ```
 - Response `201`
 ```json
 {
   "productId": 1, "productCode": "MCM-XXXXX", "productName": "Aren Shopper", "productImage": "url",
+  "nickname": "string", "memoryCapsule": "string",
   "isVerified": true, "registeredAt": "2026-08-11T00:00:00Z"
 }
 ```
-- 비고: `productImage`는 선택 필드 (미전송 시 `null`) — 2026-08-20 추가
+- 비고: `productImage`, `nickname`, `memoryCapsule`는 전부 선택 필드 (미전송 시 `null`) — `nickname`(가방 별칭), `memoryCapsule`(첫 기억 아카이빙 텍스트)는 2026-08-20 추가, FE 요청 #2
 - 비고: 최소 1개 제품 등록이 온보딩 필수 조건 (기능명세 확정사항)
 - 비고: 등록 시 `purchaseDate` 기준 **+6개월 시점**의 케어 알림(`CareNotification`)이 자동 생성된다. 이 알림은 `GET /care/notifications`로 조회한다 (2026-08-19 추가)
 
@@ -135,11 +139,13 @@ DPP 제품 등록. NFC/QR 태깅 후 신규 제품이면 이 API 호출.
 ```json
 {
   "productId": 1, "productName": "Aren Shopper", "productCode": "MCM-XXXXX",
-  "productImage": "url", "purchaseDate": "2026-08-11", "registeredAt": "2026-08-11T00:00:00Z",
+  "productImage": "url", "nickname": "string", "memoryCapsule": "string",
+  "purchaseDate": "2026-08-11", "registeredAt": "2026-08-11T00:00:00Z",
   "isVerified": true
 }
 ```
 - 에러: `404` (없거나 타인 제품)
+- 비고: `nickname`/`memoryCapsule`는 마이페이지에서 제품 클릭 시 등록 당시 작성한 내용을 보여주는 용도 (2026-08-20 추가, FE 요청 #2)
 
 ### `GET /products/scan?code={productCode}` — 담당 선민님
 
