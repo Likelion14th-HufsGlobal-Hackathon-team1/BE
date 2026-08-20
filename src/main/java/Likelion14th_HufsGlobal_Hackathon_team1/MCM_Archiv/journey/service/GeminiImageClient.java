@@ -14,6 +14,7 @@ import java.util.Objects;
 public class GeminiImageClient {
 
     private static final String MODEL = "gemini-2.5-flash-image";
+    private static final double TEMPERATURE = 1.3;
 
     private final RestClient restClient;
     private final String apiKey;
@@ -54,12 +55,12 @@ public class GeminiImageClient {
         static GeminiRequest of(String prompt) {
             return new GeminiRequest(
                     List.of(new ReqContent(List.of(new ReqPart(prompt)))),
-                    new GenerationConfig(List.of("IMAGE"))
+                    new GenerationConfig(List.of("IMAGE"), TEMPERATURE)
             );
         }
         record ReqContent(List<ReqPart> parts) {}
         record ReqPart(String text) {}
-        record GenerationConfig(List<String> responseModalities) {}
+        record GenerationConfig(List<String> responseModalities, Double temperature) {}
     }
 
     private record GeminiResponse(List<Candidate> candidates) {

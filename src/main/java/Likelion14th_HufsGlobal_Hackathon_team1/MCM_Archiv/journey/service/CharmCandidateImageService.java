@@ -12,19 +12,28 @@ public class CharmCandidateImageService {
 
     private static final int CANDIDATE_COUNT = 3;
 
+    private static final List<String> VARIATION_HINTS = List.of(
+            "Center the composition on the city's single most iconic landmark, in bright "
+                    + "daytime lighting.",
+            "Center the composition on a characteristic street or neighborhood scene rather "
+                    + "than one landmark, in warm golden-hour lighting.",
+            "Center the composition on a natural or waterfront element (park, river, "
+                    + "coastline, or greenery) typical of the city if one exists, in a "
+                    + "cooler evening or dusk mood."
+    );
+
     private final GeminiImageClient geminiImageClient;
     private final CloudinaryImageUploader imageUploader;
 
     public List<String> generateCandidateImageUrls(String country, String city, String memo) {
-        String prompt = buildPrompt(country, city, memo);
-
         return IntStream.range(0, CANDIDATE_COUNT)
-                .mapToObj(i -> geminiImageClient.generateImageBase64(prompt))
+                .mapToObj(i -> buildPrompt(country, city, memo, VARIATION_HINTS.get(i)))
+                .map(geminiImageClient::generateImageBase64)
                 .map(imageUploader::upload)
                 .toList();
     }
 
-    private String buildPrompt(String country, String city, String memo) {
+    private String buildPrompt(String country, String city, String memo, String variationHint) {
         String memoLine = (memo == null || memo.isBlank()) ? "a memorable trip" : memo;
 
         return """
@@ -69,6 +78,9 @@ public class CharmCandidateImageService {
                 People are optional and secondary. If people appear, portray them
                 naturally, respectfully, and neutrally — no racial or ethnic caricatures,
                 exaggerated cultural stereotypes, or offensive depictions.
-                """.formatted(city, country, memoLine);
+
+                VARIATION:
+                %s
+                """.formatted(city, country, memoLine, variationHint);
     }
 }
