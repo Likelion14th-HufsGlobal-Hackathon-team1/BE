@@ -1,4 +1,4 @@
-# API 계약서 — MCM-Archiv (SJF 트랙 해커톤)
+# API 계약서 — Archiv (SJF 트랙 해커톤)
 
 > 작성: BE 팀장 선민님 · 2026-08-12
 > 이 문서와 `BE_개발컨벤션_해커톤.md`가 충돌하면 **이 문서가 우선**한다.
@@ -19,6 +19,7 @@
 | 타인 리소스 접근 | `403` 대신 **`404`** (존재 여부 은닉) |
 | 검증 실패 | `400 VALIDATION_FAILED` |
 | `userId` | Request Body/쿼리로 절대 받지 않음. JWT에서 서버가 추출 |
+| 이미지 URL 제약 | AI가 직접 접근하는 이미지 필드(`POST /journeys`의 `imageUrls`, `POST /care/reports`의 `imageUrl`)는 **`res.cloudinary.com` 호스트만 허용** (SSRF 방어, 2026-08-20 추가). 다른 호스트는 공개 URL이어도 거부됨 — `journeys`는 조용히 무시하고 진행, `care/reports`는 `400 VALIDATION_FAILED` 반환 |
 
 ### 공통 에러 코드
 
