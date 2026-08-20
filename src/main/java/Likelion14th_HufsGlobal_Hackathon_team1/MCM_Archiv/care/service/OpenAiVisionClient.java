@@ -89,7 +89,7 @@ public class OpenAiVisionClient {
         }
         try {
             ResponseEntity<Void> response = RestClient.create()
-                    .method(HttpMethod.HEAD)
+                    .method(HttpMethod.GET)
                     .uri(imageUrl)
                     .retrieve()
                     .toBodilessEntity();
