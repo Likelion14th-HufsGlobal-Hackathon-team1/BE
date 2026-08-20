@@ -69,7 +69,8 @@ public class CharmCandidateImageService {
     private boolean isAllowedReferenceImageUrl(String url) {
         try {
             URI uri = URI.create(url);
-            return "https".equalsIgnoreCase(uri.getScheme())
+            String scheme = uri.getScheme();
+            return ("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme))
                     && ALLOWED_REFERENCE_IMAGE_HOST.equalsIgnoreCase(uri.getHost());
         } catch (Exception e) {
             return false;

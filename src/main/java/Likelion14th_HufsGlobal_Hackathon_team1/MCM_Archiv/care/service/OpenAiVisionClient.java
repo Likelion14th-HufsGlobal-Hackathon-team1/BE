@@ -111,7 +111,8 @@ public class OpenAiVisionClient {
     private boolean isAllowedImageUrl(String imageUrl) {
         try {
             URI uri = URI.create(imageUrl);
-            return "https".equalsIgnoreCase(uri.getScheme())
+            String scheme = uri.getScheme();
+            return ("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme))
                     && ALLOWED_IMAGE_HOST.equalsIgnoreCase(uri.getHost());
         } catch (Exception e) {
             return false;
