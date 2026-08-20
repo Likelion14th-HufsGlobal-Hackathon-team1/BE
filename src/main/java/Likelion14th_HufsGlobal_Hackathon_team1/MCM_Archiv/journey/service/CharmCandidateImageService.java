@@ -79,6 +79,10 @@ public class CharmCandidateImageService {
                 it conflicts with the specified city, prioritize the city identity above.
                 Never reproduce any text, signage, logos, or branded elements visible in
                 the reference image.
+                Ignore the reference image's own aspect ratio, framing, borders, or
+                letterboxing entirely — the FULL-BLEED COMPOSITION rule above still applies
+                regardless of the reference image's shape. Never carry over any border,
+                margin, or frame from the reference image.
                 """
                 : "";
 
