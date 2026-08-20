@@ -13,6 +13,7 @@ public class CharmCandidateImageService {
     private static final int CANDIDATE_COUNT = 3;
 
     private final CloudflareImageClient cloudflareImageClient;
+    private final CharmBackgroundRemover backgroundRemover;
     private final CloudinaryImageUploader imageUploader;
 
     public List<String> generateCandidateImageUrls(String country, String city, String memo) {
@@ -20,6 +21,7 @@ public class CharmCandidateImageService {
 
         return IntStream.range(0, CANDIDATE_COUNT)
                 .mapToObj(i -> cloudflareImageClient.generateImageBase64(prompt))
+                .map(backgroundRemover::makeWhiteTransparent)
                 .map(imageUploader::upload)
                 .toList();
     }
