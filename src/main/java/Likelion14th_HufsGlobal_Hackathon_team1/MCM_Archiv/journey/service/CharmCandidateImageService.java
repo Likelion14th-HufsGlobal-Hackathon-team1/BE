@@ -28,16 +28,16 @@ public class CharmCandidateImageService {
         String memoLine = (memo == null || memo.isBlank()) ? "a memorable trip" : memo;
 
         return """
-                A single square decorative illustration representing a trip to %s, %s.
-                Design an abstract artistic motif inspired by a landmark or cultural symbol
-                of the destination, styled to reflect this travel memory: "%s".
-                Warm, colorful, elegant illustrative style, centered composition, suitable
-                to be displayed inside a circular photo frame.
-                The design contains absolutely NO text, NO letters, NO words, and the city
-                or country name is NEVER written anywhere on it — motif only, no typography
-                at all. No logos, no brand marks.
-                Flat product illustration on a solid pure white (#FFFFFF) background,
-                no shadow, no gradient, no vignette, square composition.
+                IMPORTANT RULE: this image must contain zero text, letters, numbers, or
+                writing of any kind — no captions, no labels, no signage, no city name
+                written anywhere. The image must be 100%% typography-free.
+
+                A full-bleed flat illustration filling the entire square canvas edge to
+                edge — no border, no frame, no ring, no card or badge shape, no white
+                margin around the artwork. The artwork itself must touch all four edges.
+                Depict an artistic scene of landmarks and scenery from %s, %s, in a warm,
+                colorful, elegant illustrative style, evoking this memory: "%s".
+                No logos, no brand marks.
                 """.formatted(city, country, memoLine);
     }
 }
