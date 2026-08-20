@@ -12,14 +12,14 @@ public class CharmCandidateImageService {
 
     private static final int CANDIDATE_COUNT = 3;
 
-    private final CloudflareImageClient cloudflareImageClient;
+    private final GeminiImageClient geminiImageClient;
     private final CloudinaryImageUploader imageUploader;
 
     public List<String> generateCandidateImageUrls(String country, String city, String memo) {
         String prompt = buildPrompt(country, city, memo);
 
         return IntStream.range(0, CANDIDATE_COUNT)
-                .mapToObj(i -> cloudflareImageClient.generateImageBase64(prompt))
+                .mapToObj(i -> geminiImageClient.generateImageBase64(prompt))
                 .map(imageUploader::upload)
                 .toList();
     }
