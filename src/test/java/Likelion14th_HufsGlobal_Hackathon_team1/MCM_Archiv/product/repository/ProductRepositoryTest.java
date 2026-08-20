@@ -19,7 +19,7 @@ class ProductRepositoryTest {
 
     @Test
     void 본인이_등록한_productCode로_조회하면_찾는다() {
-        Product product = Product.register(1L, "MCM-SCOPE-001", "Aren Shopper", LocalDate.now());
+        Product product = Product.register(1L, "MCM-SCOPE-001", "Aren Shopper", null, LocalDate.now());
         productRepository.save(product);
 
         Optional<Product> found = productRepository.findByProductCodeAndUserId("MCM-SCOPE-001", 1L);
@@ -30,7 +30,7 @@ class ProductRepositoryTest {
 
     @Test
     void 다른_유저가_등록한_productCode로_조회하면_비어있다() {
-        Product product = Product.register(1L, "MCM-SCOPE-002", "Aren Shopper", LocalDate.now());
+        Product product = Product.register(1L, "MCM-SCOPE-002", "Aren Shopper", null, LocalDate.now());
         productRepository.save(product);
 
         Optional<Product> found = productRepository.findByProductCodeAndUserId("MCM-SCOPE-002", 2L);

@@ -34,7 +34,7 @@ class ProductScanControllerTest {
 
     @Test
     void 본인이_등록한_제품코드로_스캔하면_200을_반환한다() throws Exception {
-        productRepository.save(Product.register(1L, "SCAN-OWN-001", "Aren Shopper", LocalDate.now()));
+        productRepository.save(Product.register(1L, "SCAN-OWN-001", "Aren Shopper", null, LocalDate.now()));
         String token = jwtProvider.createAccessToken(1L);
 
         mockMvc.perform(get("/products/scan")
@@ -46,7 +46,7 @@ class ProductScanControllerTest {
 
     @Test
     void 남이_등록한_제품코드로_스캔하면_404를_반환한다() throws Exception {
-        productRepository.save(Product.register(1L, "SCAN-OTHER-001", "Aren Shopper", LocalDate.now()));
+        productRepository.save(Product.register(1L, "SCAN-OTHER-001", "Aren Shopper", null, LocalDate.now()));
         String token = jwtProvider.createAccessToken(2L);
 
         mockMvc.perform(get("/products/scan")

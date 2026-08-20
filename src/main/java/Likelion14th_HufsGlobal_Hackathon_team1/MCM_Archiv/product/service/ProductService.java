@@ -25,12 +25,14 @@ public class ProductService {
             Long userId,
             String productCode,
             String productName,
+            String productImage,
             LocalDate purchaseDate
     ) {
         Product product = Product.register(
                 userId,
                 productCode,
                 productName,
+                productImage,
                 purchaseDate
         );
 

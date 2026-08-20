@@ -54,6 +54,7 @@ public class Product {
             Long userId,
             String productCode,
             String productName,
+            String productImage,
             LocalDate purchaseDate
     ) {
         Instant now = Instant.now();
@@ -61,6 +62,7 @@ public class Product {
         this.userId = userId;
         this.productCode = productCode;
         this.productName = productName;
+        this.productImage = productImage;
         this.purchaseDate = purchaseDate;
         this.registeredAt = now;
         this.createdAt = now;
@@ -71,12 +73,14 @@ public class Product {
             Long userId,
             String productCode,
             String productName,
+            String productImage,
             LocalDate purchaseDate
     ) {
         return new Product(
                 userId,
                 productCode,
                 productName,
+                productImage,
                 purchaseDate
         );
     }

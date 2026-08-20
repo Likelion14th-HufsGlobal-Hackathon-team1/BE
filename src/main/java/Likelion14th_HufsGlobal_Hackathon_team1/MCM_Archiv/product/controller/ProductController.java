@@ -29,6 +29,7 @@ public class ProductController {
                 userId,
                 request.productCode(),
                 request.productName(),
+                request.productImage(),
                 request.purchaseDate()
         );
 

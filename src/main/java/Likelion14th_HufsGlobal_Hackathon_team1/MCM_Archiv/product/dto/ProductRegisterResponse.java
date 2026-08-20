@@ -8,6 +8,7 @@ public record ProductRegisterResponse(
         Long productId,
         String productCode,
         String productName,
+        String productImage,
         boolean isVerified,
         Instant registeredAt
 ) {
@@ -17,6 +18,7 @@ public record ProductRegisterResponse(
                 product.getId(),
                 product.getProductCode(),
                 product.getProductName(),
+                product.getProductImage(),
                 product.isVerified(),
                 product.getRegisteredAt()
         );

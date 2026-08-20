@@ -13,6 +13,8 @@ public record ProductRegisterRequest(
         @NotBlank
         String productName,
 
+        String productImage,
+
         @NotNull
         LocalDate purchaseDate
 
