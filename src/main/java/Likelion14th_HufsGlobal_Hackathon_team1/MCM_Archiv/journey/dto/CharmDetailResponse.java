@@ -14,6 +14,10 @@ public record CharmDetailResponse(
         String city,
         String memo,
         LocalDate travelDate,
+        Double positionX,
+        Double positionY,
+        Double rotation,
+        Double scale,
         ProductSummary product,
         List<String> images
 ) {
@@ -29,6 +33,10 @@ public record CharmDetailResponse(
                 charm.getCity(),
                 charm.getMemo(),
                 charm.getTravelDate(),
+                charm.getPositionX(),
+                charm.getPositionY(),
+                charm.getRotation(),
+                charm.getScale(),
                 new ProductSummary(product.getId(), product.getProductName()),
                 charm.getImages().stream().map(CharmImage::getImageUrl).toList()
         );

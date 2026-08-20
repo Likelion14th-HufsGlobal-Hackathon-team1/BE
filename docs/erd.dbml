@@ -40,6 +40,10 @@ Table charms {
   memo text
   travel_date date
   ai_image_url varchar [not null]
+  position_x double
+  position_y double
+  rotation double
+  scale double
   created_at datetime
 }
 

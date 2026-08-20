@@ -6,6 +6,7 @@ import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.dto.CharmCreat
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.dto.CharmCreateResponse;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.dto.CharmDetailResponse;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.dto.CharmListResponse;
+import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.dto.CharmPositionUpdateRequest;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.entity.Charm;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.entity.CharmImage;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.repository.CharmRepository;
@@ -62,6 +63,17 @@ public class CharmService {
 
         var product = productService.findByIdAndUserId(charm.getProductId(), userId);
 
+        return CharmDetailResponse.from(charm, product);
+    }
+
+    @Transactional
+    public CharmDetailResponse updatePosition(Long userId, Long charmId, CharmPositionUpdateRequest request) {
+        Charm charm = charmRepository.findByIdAndUserId(charmId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "참을 찾을 수 없습니다."));
+
+        charm.updatePosition(request.positionX(), request.positionY(), request.rotation(), request.scale());
+
+        var product = productService.findByIdAndUserId(charm.getProductId(), userId);
         return CharmDetailResponse.from(charm, product);
     }
 }

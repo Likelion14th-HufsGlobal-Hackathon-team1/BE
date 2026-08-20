@@ -7,10 +7,14 @@ import java.util.List;
 
 public record CharmListResponse(int totalCountries, int totalJourneys, List<CharmSummaryResponse> charms) {
 
-    public record CharmSummaryResponse(Long charmId, String aiImageUrl, String country, String city, LocalDate travelDate) {
+    public record CharmSummaryResponse(
+            Long charmId, String aiImageUrl, String country, String city, LocalDate travelDate,
+            Double positionX, Double positionY, Double rotation, Double scale
+    ) {
         public static CharmSummaryResponse from(Charm charm) {
             return new CharmSummaryResponse(
-                    charm.getId(), charm.getAiImageUrl(), charm.getCountry(), charm.getCity(), charm.getTravelDate()
+                    charm.getId(), charm.getAiImageUrl(), charm.getCountry(), charm.getCity(), charm.getTravelDate(),
+                    charm.getPositionX(), charm.getPositionY(), charm.getRotation(), charm.getScale()
             );
         }
     }

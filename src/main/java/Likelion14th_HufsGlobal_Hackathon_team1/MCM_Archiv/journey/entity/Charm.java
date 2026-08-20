@@ -53,6 +53,18 @@ public class Charm {
     @Column(name = "ai_image_url", nullable = false, length = 1000)
     private String aiImageUrl;
 
+    @Column(name = "position_x")
+    private Double positionX;
+
+    @Column(name = "position_y")
+    private Double positionY;
+
+    @Column(name = "rotation")
+    private Double rotation;
+
+    @Column(name = "scale")
+    private Double scale;
+
     @OneToMany(mappedBy = "charm", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @OrderBy("id ASC")
     private List<CharmImage> images = new ArrayList<>();
@@ -76,5 +88,12 @@ public class Charm {
     public void addImage(CharmImage image) {
         images.add(image);
         image.assignCharm(this);
+    }
+
+    public void updatePosition(Double positionX, Double positionY, Double rotation, Double scale) {
+        this.positionX = positionX;
+        this.positionY = positionY;
+        this.rotation = rotation;
+        this.scale = scale;
     }
 }

@@ -5,6 +5,7 @@ import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.dto.CharmCreat
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.dto.CharmCreateResponse;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.dto.CharmDetailResponse;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.dto.CharmListResponse;
+import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.dto.CharmPositionUpdateRequest;
 import Likelion14th_HufsGlobal_Hackathon_team1.MCM_Archiv.journey.service.CharmService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,5 +36,14 @@ public class CharmController {
     @GetMapping("/{charmId}")
     public CharmDetailResponse findCharm(@LoginUser Long userId, @PathVariable Long charmId) {
         return charmService.findCharm(userId, charmId);
+    }
+
+    @PatchMapping("/{charmId}/position")
+    public CharmDetailResponse updatePosition(
+            @LoginUser Long userId,
+            @PathVariable Long charmId,
+            @Valid @RequestBody CharmPositionUpdateRequest request
+    ) {
+        return charmService.updatePosition(userId, charmId, request);
     }
 }

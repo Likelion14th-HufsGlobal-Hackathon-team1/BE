@@ -201,7 +201,8 @@ NFC/QR 태깅 시 분기 조회. 신규/기존 여부 프론트에서 이 응답
 {
   "totalCountries": 3, "totalJourneys": 4,
   "charms": [
-    { "charmId": 10, "aiImageUrl": "url", "country": "Japan", "city": "Tokyo", "travelDate": "2026-08-01" }
+    { "charmId": 10, "aiImageUrl": "url", "country": "Japan", "city": "Tokyo", "travelDate": "2026-08-01",
+      "positionX": null, "positionY": null, "rotation": null, "scale": null }
   ]
 }
 ```
@@ -214,11 +215,23 @@ NFC/QR 태깅 시 분기 조회. 신규/기존 여부 프론트에서 이 응답
 {
   "charmId": 10, "aiImageUrl": "url", "country": "Japan", "city": "Tokyo",
   "memo": "string", "travelDate": "2026-08-01",
+  "positionX": 0.42, "positionY": 0.31, "rotation": 15.0, "scale": 1.2,
   "product": { "productId": 1, "productName": "Aren Shopper" },
   "images": ["url1", "url2"]
 }
 ```
 - 에러: `404` (없거나 타인 참)
+- 비고: `positionX/positionY/rotation/scale`은 값의 의미(좌표계·단위)를 서버가 해석하지 않고 FE가 보낸 숫자를 그대로 저장·반환만 함. `PATCH /charms/{charmId}/position` 호출 전엔 전부 `null` (2026-08-20 추가)
+
+### `PATCH /charms/{charmId}/position`
+참을 대표 이미지 위에 올린 배치(위치·회전·크기) 저장. (2026-08-20 추가, FE 요청 #3)
+
+- Request
+```json
+{ "positionX": 0.42, "positionY": 0.31, "rotation": 15.0, "scale": 1.2 }
+```
+- Response `200`: `GET /charms/{charmId}`와 동일 형태
+- 에러: `404` (없거나 타인 참), `400 VALIDATION_FAILED` (필드 누락)
 
 ---
 
