@@ -66,7 +66,7 @@ public class GeminiImageClient {
             }
             return new GeminiRequest(
                     List.of(new ReqContent(parts)),
-                    new GenerationConfig(List.of("IMAGE"), TEMPERATURE)
+                    new GenerationConfig(List.of("IMAGE"), TEMPERATURE, new ImageConfig("1:1"))
             );
         }
         record ReqContent(List<ReqPart> parts) {}
@@ -81,7 +81,8 @@ public class GeminiImageClient {
             }
         }
         record InlineDataPart(String mimeType, String data) {}
-        record GenerationConfig(List<String> responseModalities, Double temperature) {}
+        record GenerationConfig(List<String> responseModalities, Double temperature, ImageConfig imageConfig) {}
+        record ImageConfig(String aspectRatio) {}
     }
 
     private record GeminiResponse(List<Candidate> candidates) {
